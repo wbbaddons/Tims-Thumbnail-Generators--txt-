@@ -31,8 +31,57 @@ class TimsThumbnailsTextListener implements \wcf\system\event\IEventListener {
 	 * Registers the files for thumbnail-creation
 	 */
 	public function checkThumbnail() {
-		if ($this->eventObj->eventAttachment->fileType == 'text/plain') {
-			$this->eventObj->eventData['hasThumbnail'] = true;
+		if (substr($this->eventObj->eventAttachment->fileType, 0,5) !== 'text/') return;
+		$this->eventObj->eventData['hasThumbnail'] = true;
+	}
+	
+	/**
+	 * Actually generate the thumbnail.
+	 */
+	public function generateThumbnail() {
+		if (substr($this->eventObj->eventAttachment->fileType, 0, 5) !== 'text/') return;
+		
+		// load data
+		$tinyAdapter = \wcf\system\image\ImageHandler::getInstance()->getAdapter();
+		$adapter = \wcf\system\image\ImageHandler::getInstance()->getAdapter();
+		$file = file($this->eventObj->eventAttachment->getLocation());
+		
+		// initialize our drawing sheeps
+		$tinyAdapter->createEmptyImage(144, 144);
+		$adapter->createEmptyImage(ATTACHMENT_THUMBNAIL_WIDTH, ATTACHMENT_THUMBNAIL_HEIGHT);
+		$tinyAdapter->setColor(0x00, 0x00, 0x00);
+		$adapter->setColor(0x00, 0x00, 0x00);
+		
+		$i = 1;
+		foreach ($file as $line) {
+			$line = str_replace("\t", "    ", $line);
+			$tinyAdapter->drawText($line, 5, $i * 10);
+			$adapter->drawText($line, 5, $i * 10);
+			$i++;
 		}
+		
+		// and create the images
+		$tinyThumbnailLocation = $this->eventObj->eventAttachment->getTinyThumbnailLocation();
+		$thumbnailLocation = $this->eventObj->eventAttachment->getThumbnailLocation();
+		
+		$tinyAdapter->writeImage($tinyThumbnailLocation);
+		$adapter->writeImage($thumbnailLocation);
+		
+		$updateData = array();
+		if (file_exists($tinyThumbnailLocation) && ($imageData = @getImageSize($tinyThumbnailLocation)) !== false) {
+			$updateData['tinyThumbnailType'] = $imageData['mime'];
+			$updateData['tinyThumbnailSize'] = @filesize($tinyThumbnailLocation);
+			$updateData['tinyThumbnailWidth'] = $imageData[0];
+			$updateData['tinyThumbnailHeight'] = $imageData[1];
+		}
+		
+		if (file_exists($thumbnailLocation) && ($imageData = @getImageSize($thumbnailLocation)) !== false) {
+			$updateData['thumbnailType'] = $imageData['mime'];
+			$updateData['thumbnailSize'] = @filesize($thumbnailLocation);
+			$updateData['thumbnailWidth'] = $imageData[0];
+			$updateData['thumbnailHeight'] = $imageData[1];
+		}
+		
+		$this->eventObj->eventData = $updateData;
 	}
 }

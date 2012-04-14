@@ -67,8 +67,10 @@ class TimsThumbnailsTextListener implements \wcf\system\event\IEventListener {
 		$tinyThumbnailLocation = $this->eventObj->eventAttachment->getTinyThumbnailLocation();
 		$thumbnailLocation = $this->eventObj->eventAttachment->getThumbnailLocation();
 		
-		$tinyAdapter->writeImage($tinyThumbnailLocation);
-		$adapter->writeImage($thumbnailLocation);
+		$tinyAdapter->writeImage($tinyThumbnailLocation.'.png');
+		rename($tinyThumbnailLocation.'.png', $tinyThumbnailLocation);
+		$adapter->writeImage($thumbnailLocation.'.png');
+		rename($thumbnailLocation.'.png', $thumbnailLocation);
 		
 		// calculate the thumbnail data
 		$updateData = array();

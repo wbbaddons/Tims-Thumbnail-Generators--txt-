@@ -2,7 +2,7 @@
 namespace wcf\system\event\listener;
 
 /**
- * Adds a new route to RouteHandler
+ * Generates thumbnails for text-files.
  *
  * @author 	Tim Düsterhus
  * @copyright	2012 Tim Düsterhus
@@ -32,6 +32,7 @@ class TimsThumbnailsTextListener implements \wcf\system\event\IEventListener {
 	 */
 	public function checkThumbnail() {
 		if (substr($this->eventObj->eventAttachment->fileType, 0,5) !== 'text/') return;
+		
 		$this->eventObj->eventData['hasThumbnail'] = true;
 	}
 	
@@ -54,7 +55,9 @@ class TimsThumbnailsTextListener implements \wcf\system\event\IEventListener {
 		
 		$i = 1;
 		foreach ($file as $line) {
+			// tabs cannot be displayed with gdlib
 			$line = str_replace("\t", "    ", $line);
+			
 			$tinyAdapter->drawText($line, 5, $i * 10);
 			$adapter->drawText($line, 5, $i * 10);
 			$i++;
@@ -67,6 +70,7 @@ class TimsThumbnailsTextListener implements \wcf\system\event\IEventListener {
 		$tinyAdapter->writeImage($tinyThumbnailLocation);
 		$adapter->writeImage($thumbnailLocation);
 		
+		// calculate the thumbnail data
 		$updateData = array();
 		if (file_exists($tinyThumbnailLocation) && ($imageData = @getImageSize($tinyThumbnailLocation)) !== false) {
 			$updateData['tinyThumbnailType'] = $imageData['mime'];

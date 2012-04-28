@@ -4,7 +4,6 @@
 		<packagename><![CDATA[Tims Thumbnail-Generators (txt)]]></packagename>
 		<packagedescription><![CDATA[Adds Thumbnails for text-files in WoltLab Community Framework™]]></packagedescription>
 		<standalone>0</standalone>
-		<isunique>1</isunique>
 		<version>1.0.0 Alpha 1</version>
 		<date>2012-04-14</date>
 		<plugin>com.woltlab.wcf.attachment</plugin>

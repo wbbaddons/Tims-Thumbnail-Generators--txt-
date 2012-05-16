@@ -1,7 +1,7 @@
 Tims Thumbnail-Generators (txt)
 ===============================
 
-Tims Thumbnail-Generators (txt) extends WoltLab Community Framework with thumbnails for text/plain files.. 
+Tims Thumbnail-Generators (txt) extends WoltLab Community Framework with thumbnails for text/plain files.
 
 
 Version notes

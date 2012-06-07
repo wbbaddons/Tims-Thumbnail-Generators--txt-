@@ -40,6 +40,9 @@ class TimsThumbnailsTextListener implements \wcf\system\event\IEventListener {
 	 * Actually generate the thumbnail.
 	 */
 	public function generateThumbnail() {
+		// someone else already grabbed this one
+		if (count($this->eventObj->eventData)) return;
+		
 		if (substr($this->eventObj->eventAttachment->fileType, 0, 5) !== 'text/') return;
 		
 		// load data

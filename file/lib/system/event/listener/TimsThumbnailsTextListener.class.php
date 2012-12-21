@@ -31,7 +31,7 @@ class TimsThumbnailsTextListener implements \wcf\system\event\IEventListener {
 	 * Registers the files for thumbnail-creation
 	 */
 	public function checkThumbnail() {
-		if (substr($this->eventObj->eventAttachment->fileType, 0,5) !== 'text/') return;
+		if (substr($this->eventObj->eventAttachment->fileType, 0, 5) !== 'text/') return;
 		
 		$this->eventObj->eventData['hasThumbnail'] = true;
 	}

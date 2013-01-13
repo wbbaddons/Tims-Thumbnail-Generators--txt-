@@ -6,7 +6,6 @@
 		<standalone>0</standalone>
 		<version>1.0.0 Alpha 1</version>
 		<date>2012-04-14</date>
-		<plugin>com.woltlab.wcf.attachment</plugin>
 	</packageinformation>
 	
 	<authorinformation>
